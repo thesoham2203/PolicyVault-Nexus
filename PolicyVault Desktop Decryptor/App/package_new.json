@@ -1,0 +1,68 @@
+{
+    "name": "policyvault",
+    "productName": "PolicyVault",
+    "version": "1.0.0",
+    "description": "Secure Document Management System",
+    "author": "PolicyVault Team",
+    "main": "main.js",
+    "homepage": ".",
+    "scripts": {
+        "start": "electron .",
+        "build": "electron-builder",
+        "build-win": "electron-builder --win",
+        "dist": "npm run build",
+        "pack": "electron-builder --dir"
+    },
+    "build": {
+        "appId": "com.policyvault.app",
+        "productName": "PolicyVault",
+        "directories": {
+            "output": "dist"
+        },
+        "files": [
+            "main.js",
+            "preload_minimal.js",
+            "renderer/**/*",
+            ".env",
+            "package.json",
+            "node_modules/**/*"
+        ],
+        "win": {
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": ["x64"]
+                }
+            ],
+            "icon": "renderer/images.png",
+            "requestedExecutionLevel": "asInvoker"
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowElevation": true,
+            "allowToChangeInstallationDirectory": true,
+            "installerIcon": "renderer/images.png",
+            "uninstallerIcon": "renderer/images.png",
+            "installerHeaderIcon": "renderer/images.png",
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true,
+            "shortcutName": "PolicyVault"
+        },
+        "extraResources": [
+            {
+                "from": ".env",
+                "to": ".env"
+            }
+        ]
+    },
+    "dependencies": {
+        "@supabase/supabase-js": "^2.0.0",
+        "bcrypt": "^6.0.0",
+        "bcryptjs": "^2.4.3",
+        "dotenv": "^17.2.0"
+    },
+    "devDependencies": {
+        "electron": "^25.0.0",
+        "electron-builder": "^26.0.12"
+    }
+}
