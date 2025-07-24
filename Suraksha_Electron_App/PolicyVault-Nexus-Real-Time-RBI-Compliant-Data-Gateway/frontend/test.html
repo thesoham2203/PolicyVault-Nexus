@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolicyVault Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .submit-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.processing {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .info-box {
+            background-color: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .test-controls {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .test-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .test-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔐 PolicyVault Test Interface</h1>
+
+        <div class="info-box">
+            <strong>Test Interface:</strong> This page allows you to test the PolicyVault encryption and storage
+            functionality. Enter test data below and submit to create an encrypted vault file.
+        </div>
+
+        <form id="testForm">
+            <div class="form-group">
+                <label for="aadhaar">Aadhaar Number:</label>
+                <input type="text" id="aadhaar" name="aadhaar" value="123456789012" placeholder="Enter Aadhaar number">
+            </div>
+
+            <div class="form-group">
+                <label for="pan">PAN Number:</label>
+                <input type="text" id="pan" name="pan" value="ABCDE1234F" placeholder="Enter PAN number">
+            </div>
+
+            <div class="form-group">
+                <label for="nominee">Nominee Name:</label>
+                <input type="text" id="nominee" name="nominee" value="John Doe" placeholder="Enter nominee name">
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                🔒 Create Secure Vault
+            </button>
+        </form>
+
+        <div id="status" class="status" style="display: none;"></div>
+
+        <div class="test-controls">
+            <h3>Test Controls:</h3>
+            <button class="test-btn" onclick="testDirectAPI()">Test Direct API</button>
+            <button class="test-btn" onclick="testEncryption()">Test Encryption</button>
+            <button class="test-btn" onclick="clearForm()">Clear Form</button>
+            <button class="test-btn" onclick="fillSampleData()">Fill Sample Data</button>
+        </div>
+    </div>
+
+    <script>
+        // Form submission handler
+        document.getElementById('testForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const statusDiv = document.getElementById('status');
+
+            // Disable button and show processing
+            submitBtn.disabled = true;
+            submitBtn.textContent = '🔄 Processing...';
+            showStatus('processing', 'Creating secure vault...');
+
+            try {
+                const formData = {
+                    aadhaar: document.getElementById('aadhaar').value,
+                    pan: document.getElementById('pan').value,
+                    nominee: document.getElementById('nominee').value
+                };
+
+                console.log('Submitting form data:', formData);
+
+                const response = await fetch('/secure/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+                console.log('Server response:', result);
+
+                if (response.ok && result.password) {
+                    showStatus('success', `✅ Vault created successfully! Password: ${result.password}`);
+                    alert(`Vault Password: ${result.password}\n\nPlease save this password securely!`);
+                } else {
+                    throw new Error(result.error || 'Unknown error occurred');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus('error', `❌ Error: ${error.message}`);
+            } finally {
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🔒 Create Secure Vault';
+            }
+        });
+
+        function showStatus(type, message) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            statusDiv.style.display = 'block';
+        }
+
+        // Test functions
+        async function testDirectAPI() {
+            try {
+                showStatus('processing', 'Testing direct API connection...');
+
+                const response = await fetch('/secure/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        aadhaar: "999999999999",
+                        pan: "TEST1234X",
+                        nominee: "Test User"
+                    })
+                });
+
+                const result = await response.json();
+                console.log('Direct API test result:', result);
+
+                if (response.ok) {
+                    showStatus('success', `✅ API test successful! Password: ${result.password}`);
+                } else {
+                    showStatus('error', `❌ API test failed: ${result.error}`);
+                }
+
+            } catch (error) {
+                console.error('Direct API test error:', error);
+                showStatus('error', `❌ API connection failed: ${error.message}`);
+            }
+        }
+
+        async function testEncryption() {
+            try {
+                showStatus('processing', 'Testing encryption capabilities...');
+
+                // Test Web Crypto API
+                const keyPair = await window.crypto.subtle.generateKey(
+                    {
+                        name: "RSA-OAEP",
+                        modulusLength: 2048,
+                        publicExponent: new Uint8Array([1, 0, 1]),
+                        hash: "SHA-256",
+                    },
+                    true,
+                    ["encrypt", "decrypt"]
+                );
+
+                const testData = new TextEncoder().encode("Encryption Test");
+                const encrypted = await window.crypto.subtle.encrypt(
+                    { name: "RSA-OAEP" },
+                    keyPair.publicKey,
+                    testData
+                );
+
+                const decrypted = await window.crypto.subtle.decrypt(
+                    { name: "RSA-OAEP" },
+                    keyPair.privateKey,
+                    encrypted
+                );
+
+                const decryptedText = new TextDecoder().decode(decrypted);
+
+                if (decryptedText === "Encryption Test") {
+                    showStatus('success', '✅ Encryption test passed!');
+                } else {
+                    showStatus('error', '❌ Encryption test failed!');
+                }
+
+            } catch (error) {
+                console.error('Encryption test error:', error);
+                showStatus('error', `❌ Encryption test failed: ${error.message}`);
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('aadhaar').value = '';
+            document.getElementById('pan').value = '';
+            document.getElementById('nominee').value = '';
+            showStatus('success', '✅ Form cleared');
+        }
+
+        function fillSampleData() {
+            document.getElementById('aadhaar').value = '123456789012';
+            document.getElementById('pan').value = 'ABCDE1234F';
+            document.getElementById('nominee').value = 'John Doe';
+            showStatus('success', '✅ Sample data filled');
+        }
+
+        // Initialize
+        console.log('PolicyVault Test Interface loaded');
+    </script>
+</body>
+
+</html>

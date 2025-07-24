@@ -1,0 +1,42 @@
+1. admin 
+2. update the fastapi endpoints by keeping the ui inact such that it take cookie instead of localstorage and will show pending requests  
+
+all the consents where status = Approved and status_admin = Pending 
+will be shown here
+when clicked on approved a container will be popped up in which all the data fields of that particular consent will be shown that could be selected and stored in approved_fields of requested_consents and using emailjs a email will be sent to the registered_consents fiu_id matching with organizations id  and email will be taken from organizations with a emailjs template showing 3 links one to download electron application if not downloaded like wise text and the link that could be visited only once to show the password that could be copied or downloaded in text file ( remember password here shouldnt be given hashed one only in database it should be stored in hash )and another link to download the .vault file  
+when this approve button will be clicked then from accounts table the account_number and the c_id from requested_consents are the matching fields and from accounts table only that particular c_id record/tuple/row will be fetched and when clicked on okay then all the fetched data will be shown in a popup for reviewing and the data that is not fetched will show "not found" in front of it and there will be an option to manually enter that data in that particular text field
+and user can remove the fields by clicking on X red icon on  left side of the fields
+and then click on share and then finally the .vault file gets generated and sent to email of organizations id matching the fiu_id and at last a password will be auto created and stored in argon2 hash in supabase requested_consents vault_password field 
+if rejected then the status_admin field should update to REJECTED
+and if revoke then the vault_password of that particular consent will be auto changed
+
+mail will be sent through emailjs only create a template for it as well
+
+if organization's name is Reserved Bank Of India then only the approve option will be visible 
+of AdminPendingRequests - done
+----add a expiry date selection in admin approve consents
+3. AdminProfile showing blocking of users 
+4. suspicious activity detected audits
+5. all audits
+6. profile for all
+7. integration with .vault - done
+8. admin roles 
+9. logout options to all 
+10. adding columns to requested_consents and accounts - done
+11. emailjs template for 3 links with a remember message you wont be able to view the .vault file afterwards and password will be given only once after that you will not get it - done
+12. integrating download electron app in landing page
+13. feedback from
+14. edge cases running 
+15. setting up or storing the data in txt file that will be used for authentication
+16. invitetoken from superadmin to organizationadmin by entering email invitetoken/link will be shared to organizations admin
+17. and if revoke then the vault_password of that particular consent will be auto changed
+
+
+profiles - 3
+revoke done
+audits done
+password
+logout
+invite token generation
+suspicious activity detection
+admin anomaly detector login patterns showed in a page so that to block or unblock other admins

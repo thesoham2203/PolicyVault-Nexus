@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolicyVault - Secure Document Viewer</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Connection Status Bar -->
+    <div id="connectionStatus" class="connection-bar">
+        <div class="status-indicator">
+            <i class="fas fa-circle" id="statusIcon"></i>
+            <span id="statusText">Initializing...</span>
+        </div>
+        <div class="connection-info" id="connectionInfo"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>PolicyVault</h1>
+                    <p>Secure Document Management</p>
+                </div>
+            </div>
+            <div class="user-section">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <span class="user-name">Secure Session</span>
+                    <span class="user-role">Administrator</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard-grid">
+            <!-- File Access Card -->
+            <div class="card primary-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-file-shield"></i>
+                    </div>
+                    <div class="card-title">
+                        <h3>Access Secure Document</h3>
+                        <p>Select and decrypt your vault files</p>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="file-input-section">
+                        <label for="fileInput" class="file-input-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span id="fileInputText">Choose Vault File</span>
+                        </label>
+                        <input type="file" id="fileInput" accept=".vault" hidden>
+                    </div>
+
+                    <div class="password-section">
+                        <div class="input-group">
+                            <div class="input-icon">
+                                <i class="fas fa-key"></i>
+                            </div>
+                            <input type="password" id="passwordInput" placeholder="Enter your secure password"
+                                class="secure-input">
+                            <button type="button" id="togglePassword" class="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id="openBtn" class="primary-button" disabled>
+                        <i class="fas fa-unlock"></i>
+                        <span>Decrypt & Open</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Available Files Card -->
+            <div class="card secondary-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="card-title">
+                        <h3>Available Documents</h3>
+                        <p>Your secure vault inventory</p>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="filesList" class="files-list">
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Loading documents...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Display Area -->
+        <div class="content-section">
+            <div class="card content-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="card-title">
+                        <h3>Document Content</h3>
+                        <p id="contentSubtitle">Decrypted content will appear here</p>
+                    </div>
+                    <div class="card-actions" style="display: none;">
+                        <!-- Security: Copy and download buttons removed for content protection -->
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="contentDisplay" class="content-display">
+                        <div class="empty-state">
+                            <i class="fas fa-lock"></i>
+                            <h4>No Document Opened</h4>
+                            <p>Select a vault file and enter your password to view encrypted content</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="renderer.js"></script>
+</body>
+
+</html>
+
+</html>

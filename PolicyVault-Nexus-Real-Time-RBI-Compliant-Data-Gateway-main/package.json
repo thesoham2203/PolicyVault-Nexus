@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@types/react": "^19.1.8",
+    "resend": "^4.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.13"
+  }
+}
