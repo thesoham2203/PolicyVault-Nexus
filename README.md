@@ -405,7 +405,7 @@ For technical support, security issues, or commercial inquiries:
 <p align="center">
   <em>Built with ❤️ for secure and compliant fintech operations by 
   <a href="https://github.com/thesoham2203"><b>Soham Penshanwar</b></a> & 
-  <a href="https://github.com/rasikathakur"><b>Rasika Thakurr</b></a>
+  <a href="https://github.com/rasikathakur"><b>Rasika Thakur</b></a>
   </em>
 </p>
 
