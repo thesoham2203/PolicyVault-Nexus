@@ -634,7 +634,7 @@ Get-Content backend\.env
 ### 8.2 Docker (Skeleton Compose)
 
 ```yaml
-version: '3.9'
+version: "3.9"
 services:
   api:
     build: ./backend
