@@ -157,7 +157,8 @@ flowchart TD
   RSA_SIGN --> DELIVERY["Secure Delivery / Vault Download"]
   DELIVERY --> DEST["Client-side Decryption for Authorized Party"]
 
-  note right of TOKENIZE: FF3-1 used in legacy vault utils (Suraksha component)
+  classDef note fill:#f9f,stroke:#333,stroke-width:2px;
+  TOKENIZE -.-> NOTE1["FF3-1 used in legacy vault utils (Suraksha component)"]:::note
 ```
 
 ### 2.4 Consent Management Workflow
