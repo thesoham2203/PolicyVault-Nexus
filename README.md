@@ -63,28 +63,28 @@ It is designed for: fintechs integrating AA-style consent brokerage; regulated F
 
 ```mermaid
 flowchart LR
-  subgraph FE[React Frontend (Vite) :5174]
-    FE_UI[Dashboards / Login / Consent UI]
+  subgraph FE["React Frontend (Vite) Port 5174"]
+    FE_UI["Dashboards / Login / Consent UI"]
   end
-  subgraph BE[FastAPI Backend :8000]
-    AUTH[/auth/* OTP & JWT HS256/]
-    ORGA[/org-auth/* Organization Login/]
-    REG[/register_org/* Verification Email & API Key/]
-    CONS[/consent/* Request & Stats/]
-    ADMIN[/admin/* Approval/Rejection/]
-    AUD[/audit/* Logging/]
-    VAULT[/admin/approve-consent -> Vault Service/]
+  subgraph BE["FastAPI Backend Port 8000"]
+    AUTH["/auth/* OTP and JWT HS256"]
+    ORGA["/org-auth/* Organization Login"]
+    REG["/register_org/* Verification Email and API Key"]
+    CONS["/consent/* Request and Stats"]
+    ADMIN["/admin/* Approval/Rejection"]
+    AUD["/audit/* Logging"]
+    VAULT["/admin/approve-consent to Vault Service"]
   end
-  subgraph VA[Vault Service (Node/Electron) :3000]
-    VCREATE[/POST /vault/create/]
+  subgraph VA["Vault Service (Node/Electron) Port 3000"]
+    VCREATE["POST /vault/create"]
   end
-  DB[(Supabase Postgres)]
-  STORE[(Supabase Storage: vault, logo-org)]
-  EXT1[(Twilio SMS)]
-  EXT2[(EmailJS)]
-  EXT3[(Google reCAPTCHA)]
-  EXT4[(FingerprintJS)]
-  EXT5[(GeoIP / ipinfo)]
+  DB[("Supabase Postgres")]
+  STORE[("Supabase Storage: vault, logo-org")]
+  EXT1[("Twilio SMS")]
+  EXT2[("EmailJS")]
+  EXT3[("Google reCAPTCHA")]
+  EXT4[("FingerprintJS")]
+  EXT5[("GeoIP / ipinfo")]
 
   FE_UI -->|HTTPS JSON| AUTH
   FE_UI -->|HTTPS JSON| ORGA
@@ -150,13 +150,14 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-  INPUT[Raw Sensitive Field] --> TOKENIZE[(Optional FPE / FF3-1*)]
-  TOKENIZE --> FERNET_ENC[AES-256 via Fernet (PBKDF2 + jwt_secret_key)]
-  FERNET_ENC --> STORE_TEMP[Transient Use / Vault Packaging]
-  STORE_TEMP --> RSA_SIGN[JWT RS256 Signing (admin tokens)]
-  RSA_SIGN --> DELIVERY[Secure Delivery / Vault Download]
-  DELIVERY --> DEST[Client-side Decryption (Authorized Party)]
-  note right of TOKENIZE: *FF3-1 used in legacy vault utils (Suraksha component)
+  INPUT["Raw Sensitive Field"] --> TOKENIZE[("Optional FPE / FF3-1")]
+  TOKENIZE --> FERNET_ENC["AES-256 via Fernet with PBKDF2 and jwt_secret_key"]
+  FERNET_ENC --> STORE_TEMP["Transient Use / Vault Packaging"]
+  STORE_TEMP --> RSA_SIGN["JWT RS256 Signing for admin tokens"]
+  RSA_SIGN --> DELIVERY["Secure Delivery / Vault Download"]
+  DELIVERY --> DEST["Client-side Decryption for Authorized Party"]
+
+  note right of TOKENIZE: FF3-1 used in legacy vault utils (Suraksha component)
 ```
 
 ### 2.4 Consent Management Workflow
