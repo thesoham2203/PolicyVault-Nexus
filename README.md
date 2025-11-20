@@ -1,375 +1,722 @@
+<div align="center">
+
 # 🔐 PolicyVault Nexus
 
-**Real-Time RBI-Compliant Data Gateway for Secure and Responsible Data Sharing in Fintech Environments**
+**Real-Time RBI-AA & DPDP-Compliant Zero-Persistence Data Gateway for Secure Financial Data Sharing**
+
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](./backend/requirements.txt)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.116.1-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green?logo=node.js)](./frontend/package.json)
+[![Electron](https://img.shields.io/badge/Electron-25.0.0-47848F?logo=electron)](./Suraksha_Electron_App/new/package.json)
+[![License](https://img.shields.io/badge/License-Proprietary-red.svg)](./LICENSE)
+[![Contributors](https://img.shields.io/github/contributors/thesoham2203/PolicyVault-Nexus)](../../graphs/contributors)
+[![Last Commit](https://img.shields.io/github/last-commit/thesoham2203/PolicyVault-Nexus)](../../commits/main)
+
+</div>
 
 ---
 
-## 🔍 Overview
+## 📑 Table of Contents
 
-PolicyVault Nexus is a comprehensive zero-persistence data gateway designed for secure financial data sharing in compliance with RBI Account Aggregator (AA) framework, India's DPDP Act, and GDPR regulations. The platform employs advanced cryptographic techniques including FF3-1 tokenization, AES-GCM field-level encryption, and hybrid RSA+AES end-to-end encryption to ensure maximum data protection while enabling seamless fintech operations.
-
-### Key Value Propositions
-
-- **Zero Data Persistence**: No sensitive data stored on servers
-- **Real-Time Processing**: Instant data tokenization and encryption
-- **Regulatory Compliance**: RBI-AA, DPDP, and GDPR compliant
-- **Multi-Layer Security**: FF3-1 + AES-GCM + E2EE hybrid encryption
-- **Consent Management**: Granular user consent with audit trails
-- **Policy-Based Access**: Open Policy Agent (OPA) integration
-- **Comprehensive Auditing**: ELK stack for complete audit logging
-
----
-
-## 🗂️ Project Structure
-
-```
-PolicyVault-Nexus/
-├── backend/                          # FastAPI REST API Server
-│   ├── app/
-│   │   ├── config.py                 # Environment configuration
-│   │   ├── main.py                   # FastAPI application entry
-│   │   ├── routers/                  # API route handlers
-│   │   │   ├── auth.py               # Admin authentication
-│   │   │   └── demo.py               # Demo endpoints
-│   │   ├── security/                 # Security modules
-│   │   │   ├── crypto.py             # Encryption utilities
-│   │   │   └── jwt.py                # JWT token management
-│   │   ├── ml/                       # Machine learning
-│   │   └── utils/                    # Utility functions
-│   ├── auth.py                       # User authentication
-│   ├── consent_requests.py           # Consent management
-│   ├── audit_router.py               # Audit logging
-│   ├── supabase_client.py            # Database client
-│   └── requirements.txt              # Python dependencies
-├── frontend/                         # React + TypeScript Frontend
-│   ├── src/
-│   │   ├── pages/                    # Application pages
-│   │   │   ├── Home.tsx              # Landing page
-│   │   │   ├── user-dashboard/       # User interface
-│   │   │   ├── fiu-dashboard/        # FIU (Financial Information User)
-│   │   │   └── admin-dashboard/      # Admin interface
-│   │   └── App.tsx                   # Main application
-│   ├── package.json                  # Node.js dependencies
-│   └── vite.config.ts                # Vite build configuration
-└── Suraksha_Electron_App/            # Desktop Vault Management
-    ├── new/                          # Electron application
-    │   ├── main.js                   # Electron main process
-    │   ├── preload.js                # Secure IPC bridge
-    │   └── renderer/                 # Desktop UI
-    └── setup.bat/setup.sh             # Installation scripts
-```
+1. [Project Overview](#1-project-overview)
+2. [Architecture & Diagrams](#2-architecture--diagrams)
+3. [Complete Setup Guide](#3-complete-setup-guide)
+4. [API Documentation](#4-api-documentation)
+5. [Usage Guide](#5-usage-guide)
+6. [Security & Compliance](#6-security--compliance)
+7. [Troubleshooting](#7-troubleshooting)
+8. [Deployment Guide](#8-deployment-guide)
+9. [Development Workflow](#9-development-workflow)
+10. [Technology Stack](#10-technology-stack)
+11. [License](#📄-license)
+12. [Support](#📞-support--contact)
 
 ---
 
-## 🛠️ Setup & Installation
+## 1. PROJECT OVERVIEW
 
-### Prerequisites
+PolicyVault Nexus is a zero-persistence real-time data gateway purpose-built for India's emerging Account Aggregator (AA) ecosystem and global privacy principles (DPDP Act & GDPR). It enables secure data exchange between Financial Information Users (FIUs), users, and administrative governance layers—without retaining any sensitive payloads on the server. All sensitive artifacts are transient, encrypted, or tokenized, ensuring minimized breach surface and auditability.
 
-- **Python 3.10+** for backend services
-- **Node.js 18+** for frontend and Electron app
-- **Git** (optional) for repository management
+The platform solves the fragmentation of consent-driven financial data flows: organizations struggle with consent orchestration, multi-layer encryption, audit traceability, and regulatory alignment. PolicyVault Nexus provides a unified consent lifecycle (request → approve/reject → vault generation → controlled usage/revocation), pluggable cryptographic primitives (RSA, Fernet/AES-256, Argon2), and machine-readable audit logs. It integrates OTP-based customer login, organization verification flows, secure vault file generation, one-time password delivery, and granular field-level consent scoping.
 
-### Quick Start
+It is designed for: fintechs integrating AA-style consent brokerage; regulated FIUs needing provable governance; compliance/security teams enforcing policy-driven access; and innovators building secure, ephemeral data-handling desktop flows (via the Electron vault manager). If you need strong cryptography, explicit consent lineage, and fast developer onboarding—this gateway is your foundation.
 
-#### 1. Clone Repository
+### Key Features & Value Propositions
 
-```bash
-git clone <repository-url>
-cd PolicyVault-Nexus-Real-Time-RBI-Compliant-Data-Gateway-main
+- 🔐 Zero persistence: sensitive payloads never stored in plaintext
+- 🧩 Modular architecture: FastAPI backend, React/Vite frontend, Electron vault service, Supabase persistence
+- ✅ Consent lifecycle orchestration (request, stats, approval, rejection, revocation, expiry)
+- 🔑 Multi-factor & OTP login with reCAPTCHA + Twilio SMS (fallback simulation)
+- 🪪 Organization onboarding + email verification & API key issuance
+- 🧪 Vault generation via external service (Node @ port 3000) + secure password handling
+- 🛡️ Cryptographic stack: Argon2 password hashing, PBKDF2-derived Fernet AES-256, RSA (RS256) JWT signing
+- 📜 Audit logging to `audit_logs` & admin action logs (`admin_audit_logs`)
+- 🌐 CORS-permitted multi-channel UI (Frontend 5174 ↔ Backend 8000)
+- 📊 Real-time consent metrics (/consent/stats)
+- 🛰️ Integrations: EmailJS, Twilio, FingerprintJS, Google reCAPTCHA, GeoIP, Okta (extensible)
+
+---
+
+## 2. ARCHITECTURE & DIAGRAMS
+
+### 2.1 System Architecture (Ports, Components, Protocols)
+
+```mermaid
+flowchart LR
+  subgraph FE[React Frontend (Vite) :5174]
+    FE_UI[Dashboards / Login / Consent UI]
+  end
+  subgraph BE[FastAPI Backend :8000]
+    AUTH[/auth/* OTP & JWT HS256/]
+    ORGA[/org-auth/* Organization Login/]
+    REG[/register_org/* Verification Email & API Key/]
+    CONS[/consent/* Request & Stats/]
+    ADMIN[/admin/* Approval/Rejection/]
+    AUD[/audit/* Logging/]
+    VAULT[/admin/approve-consent -> Vault Service/]
+  end
+  subgraph VA[Vault Service (Node/Electron) :3000]
+    VCREATE[/POST /vault/create/]
+  end
+  DB[(Supabase Postgres)]
+  STORE[(Supabase Storage: vault, logo-org)]
+  EXT1[(Twilio SMS)]
+  EXT2[(EmailJS)]
+  EXT3[(Google reCAPTCHA)]
+  EXT4[(FingerprintJS)]
+  EXT5[(GeoIP / ipinfo)]
+
+  FE_UI -->|HTTPS JSON| AUTH
+  FE_UI -->|HTTPS JSON| ORGA
+  FE_UI -->|HTTPS JSON| REG
+  FE_UI -->|HTTPS JSON| CONS
+  FE_UI -->|HTTPS JSON| ADMIN
+  AUTH --> DB
+  ORGA --> DB
+  REG --> DB
+  CONS --> DB
+  ADMIN --> DB
+  ADMIN -->|Vault Metadata| STORE
+  ADMIN -->|POST| VCREATE
+  VCREATE --> STORE
+  AUD --> DB
+  AUTH --> EXT3
+  AUTH --> EXT1
+  REG --> EXT2
+  FE_UI --> EXT4
+  ADMIN --> EXT5
 ```
 
-#### 2. Backend Setup
+### 2.2 User Journey (Login → OTP → Consent → Encryption → Vault Generation)
 
-```bash
-cd backend
+```mermaid
+sequenceDiagram
+  participant U as User (Customer)
+  participant FE as Frontend (React)
+  participant BE as Backend (FastAPI)
+  participant SB as Supabase
+  participant ADM as Admin
+  participant VS as Vault Service (Node :3000)
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# venv\Scripts\activate   # Windows
-
-# Install dependencies
-pip install --upgrade pip
-pip install -r requirements.txt
-
-# Configure environment (.env file already exists)
-# Edit .env with your actual credentials if needed
+  U->>FE: Enter Account Number & Captcha
+  FE->>BE: POST /auth/start-login {account, recaptcha_token}
+  BE->>EXT: Verify reCAPTCHA
+  BE->>SB: Lookup accounts → customers (phone)
+  BE-->>FE: OTP dispatched (masked phone)
+  U->>FE: Enter OTP
+  FE->>BE: POST /auth/verify-otp {account, otp}
+  BE->>SB: Validate OTP context
+  BE-->>FE: JWT (HS256) + customer_name + customer_id
+  FE->>BE: Organization login (POST /org-auth/login)
+  BE->>SB: Validate org, status=VERIFIED & api_key
+  BE-->>FE: Org Session JWT
+  FE->>BE: POST /consent/request-consent {fields,purpose}
+  BE->>SB: Insert requested_consents (status=PENDING)
+  BE->>BE: Audit log CREATE
+  BE-->>FE: Consent Created (c_id)
+  ADM->>BE: GET /admin/pending-consents
+  BE->>SB: Fetch pending
+  ADM->>BE: POST /admin/approve-consent {consent_id, approved_fields, expiry_date}
+  BE->>VS: POST /vault/create {approved_fields, fiu_id, customer_id}
+  VS->>STORE: Store encrypted vault file
+  BE->>SB: Update secure_files + requested_consents (status_admin=APPROVED)
+  BE->>BE: Audit logs + admin_audit_logs
+  U->>BE: GET /api/active-consents/{customer_id}
+  BE->>SB: Filter APPROVED/ACTIVE consents
+  BE-->>U: Active Consent + vault metadata
 ```
 
-#### 3. Frontend Setup
+### 2.3 Encryption Pipeline
 
-```bash
-cd frontend
-npm install
+```mermaid
+flowchart TD
+  INPUT[Raw Sensitive Field] --> TOKENIZE[(Optional FPE / FF3-1*)]
+  TOKENIZE --> FERNET_ENC[AES-256 via Fernet (PBKDF2 + jwt_secret_key)]
+  FERNET_ENC --> STORE_TEMP[Transient Use / Vault Packaging]
+  STORE_TEMP --> RSA_SIGN[JWT RS256 Signing (admin tokens)]
+  RSA_SIGN --> DELIVERY[Secure Delivery / Vault Download]
+  DELIVERY --> DEST[Client-side Decryption (Authorized Party)]
+  note right of TOKENIZE: *FF3-1 used in legacy vault utils (Suraksha component)
 ```
 
-#### 4. Electron App Setup
+### 2.4 Consent Management Workflow
 
-```bash
-cd ../Suraksha_Electron_App/new
-npm install
+```mermaid
+flowchart LR
+  FIU[FIU Portal /org-auth] -->|JWT org| CREATE[POST /consent/request-consent]
+  CREATE --> DB1[(requested_consents)]
+  DB1 --> PENDING{status=PENDING}
+  PENDING -->|Admin Review| ADMIN_GET[GET /admin/pending-consents]
+  ADMIN_GET --> DECIDE{Approve?}
+  DECIDE -->|Yes| APPROVE[POST /admin/approve-consent]
+  DECIDE -->|No| REJECT[POST /admin/reject-consent]
+  APPROVE --> VAULT[Vault Service /vault/create]
+  VAULT --> SEC_FILES[(secure_files + secure_password)]
+  APPROVE --> UPDATE_REQ[requested_consents status_admin=APPROVED]
+  REJECT --> UPDATE_RJ[requested_consents status_admin=REJECTED]
+  UPDATE_REQ --> ACTIVE[Consent ACTIVE]
+  UPDATE_RJ --> REJECTED[Consent REJECTED]
+  ACTIVE --> REVOKE[POST /admin/revoke-consent]
+  REVOKE --> UPDATE_REV[requested_consents status_admin=REVOKED]
 ```
 
-### Environment Configuration
+### 2.5 Database ER Diagram (Derived from Code Usage)
 
-Create `.env` files in respective directories:
+```mermaid
+erDiagram
+  organizations ||--o{ requested_consents : "fiu_id"
+  customers ||--o{ accounts : "customer_id"
+  accounts ||--o{ requested_consents : "account_number=user_identifier"
+  requested_consents ||--o{ audit_logs : "consent_id"
+  requested_consents ||--o{ secure_files : "consent_id"
+  secure_files }o--|| secure_password : "pass_id"
+  organizations {
+    uuid id
+    string registration_number
+    string org_name
+    string contact_email
+    string contact_number
+    string api_key
+    string status
+  }
+  customers {
+    uuid id
+    string customer_name
+    string phone_number
+  }
+  accounts {
+    string account_number
+    uuid customer_id
+  }
+  requested_consents {
+    uuid id
+    string c_id
+    string user_identifier
+    uuid customer_id
+    uuid fiu_id
+    string purpose
+    json datafields
+    string status
+    string status_admin
+    string consent_signature
+    json consent_details
+    timestamp created_at
+    timestamp actual_expiry
+    string rejection_reason
+    uuid admin_id
+  }
+  audit_logs {
+    uuid id
+    uuid consent_id
+    string action
+    string status
+    string ip_address
+    string detail
+    uuid fiu_id
+    timestamp timestamp
+  }
+  secure_files {
+    uuid id
+    uuid consent_id
+    string c_id
+    uuid fiu_id
+    uuid pass_id
+    timestamp updated_at
+    uuid admin_id
+    string vault_file
+  }
+  secure_password {
+    uuid id
+    string password
+  }
+```
 
-**Backend (.env)**
+### 2.6 Component Interaction (Frontend Request Cycle)
+
+```mermaid
+sequenceDiagram
+  participant FE as Frontend (React Fetch/Axios)
+  participant BE as FastAPI
+  participant DB as Supabase
+  participant AUD as AuditService
+
+  FE->>BE: GET /consent/consents (Authorization: Bearer org_jwt)
+  BE->>BE: Decode HS256 org_jwt
+  BE->>DB: SELECT requested_consents WHERE fiu_id
+  DB-->>BE: Rows
+  BE->>AUD: log_action(FETCH, SUCCESSFUL, fiu_id)
+  AUD-->>DB: INSERT audit_logs
+  BE-->>FE: JSON consent list
+```
+
+<details>
+<summary>Click to expand: Additional architectural notes</summary>
+
+1. OTP storage is in-memory (`otp_store`) – replace with Redis in production.
+2. RSA key pair generated dynamically if `private_key.pem` / `public_key.pem` absent.
+3. Vault password currently handled via `secure_password` & one-time retrieval endpoint `/password-vault/{consent_id}`.
+4. External EmailJS integration uses environment keys for verification emails.
+5. Approval triggers Node vault service call (`http://localhost:3000/vault/create`).
+
+</details>
+
+---
+
+## 3. COMPLETE SETUP GUIDE
+
+### 3.1 Prerequisites
+
+| Component        | Version | Source                                 |
+| ---------------- | ------- | -------------------------------------- |
+| Python           | 3.10+   | System                                 |
+| FastAPI          | 0.116.1 | backend/requirements.txt               |
+| Uvicorn          | 0.35.0  | backend/requirements.txt               |
+| Node.js          | 18+     | System                                 |
+| React            | 18.3.1  | frontend/package.json                  |
+| Vite             | 5.4.2   | frontend/package.json                  |
+| Electron         | 25.0.0  | Suraksha_Electron_App/new/package.json |
+| Supabase Python  | 2.3.4   | backend/requirements.txt               |
+| Redis (optional) | 6+      | External service                       |
+
+External Services:
+
+- Twilio SMS (OTP distribution)
+- Google reCAPTCHA (bot prevention)
+- EmailJS (organization verification)
+- ipinfo GeoIP (admin action attribution)
+- FingerprintJS (device fingerprinting)
+
+### 3.2 Directory Layout (Verified)
+
+```
+backend/
+  main.py
+  auth.py
+  org_auth.py
+  register_org.py
+  consent_requests.py
+  admin_consents.py
+  approved_consents.py
+  consents.py
+  audit_router.py
+  audit_service.py
+  supabase_client.py
+  app/security/{crypto.py,jwt.py,token_invite.py}
+frontend/
+  src/pages/{admin-dashboard,user-dashboard,fiu-dashboard}
+Suraksha_Electron_App/new/{main.js,generate_vault.js,renderer/}
+```
+
+### 3.3 Environment Variables (Backend `.env`)
 
 ```env
-# Supabase Configuration
-SUPABASE_URL=your_supabase_url
-SUPABASE_SERVICE_ROLE=your_service_role_key
-
-# Encryption Keys
-AES_256_GCM_KEY_HEX=your_aes_key
-JWT_SECRET_KEY=your_jwt_secret
-
-# External Services
-OKTA_CLIENT_ID=your_okta_client_id
-FINGERPRINTJS_API_KEY=your_fingerprint_api_key
+SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE=...
+JWT_SECRET_KEY=...
+JWT_PRIVATE_KEY=...            # optional if pre-provisioned
+JWT_PUBLIC_KEY=...
+EMAILJS_SERVICE_ID=...
+EMAILJS_TEMPLATE_ID=...
+EMAILJS_TEMPLATE_ID2=...       # secondary template
+EMAILJS_USER_ID=...
+EMAILJS_PRIVATE_KEY=...
+OKTA_CLIENT_ID=...
+OKTA_CLIENT_SECRET=...
+OKTA_ISSUER=...
+FINGERPRINTJS_API_KEY=...
 REDIS_URL=redis://localhost:6379
+IPINFO_TOKEN=...
+RECAPTCHA_SECRET=...
+TWILIO_ACCOUNT_SID=...
+TWILIO_AUTH_TOKEN=...
+TWILIO_PHONE_NUMBER=...
+FRONTEND_BASE_URL=http://localhost:5174
+JWT_SECRET_Key=...             # (note code uses this capitalization in register_org)
+VERIFICATION_TOKEN_EXPIRE_HOURS=24
 ```
 
----
+Electron `.env` (example):
 
-## 🚀 Usage Instructions
+```env
+SUPABASE_URL=...
+SUPABASE_ANON_KEY=...
+VAULT_BUCKET=vault
+```
 
-### Starting the System
+### 3.4 Backend Installation
 
-#### Option 1: Complete System Startup
-
-````bash
-# Terminal 1 - Backend
+```powershell
 cd backend
-python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
+python -m venv venv
+venv\Scripts\activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-# Terminal 2 - Frontend
+Run:
+
+```powershell
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### 3.5 Frontend Installation
+
+```powershell
 cd frontend
-npm run dev
+npm install
+npm run dev   # Serves on port 5174 (per package.json)
+```
 
-# Terminal 3 - Electron App
-cd ../Suraksha_Electron_App/new
+### 3.6 Electron Vault App
+
+```powershell
+cd Suraksha_Electron_App\new
+npm install
 npm start
-```#### Option 2: Automated Setup (Windows/Linux)
+```
 
-```bash
-# Windows
-setup.bat && start_all.bat
+### 3.7 Quick 5‑Minute Setup (Experienced Dev)
 
-# Linux/Mac
-./setup.sh && ./start_all.sh
-````
+```powershell
+git clone <repo-url>
+cd PolicyVault-Nexus/PolicyVault-Nexus-Real-Time-RBI-Compliant-Data-Gateway-main
+copy .env.example backend\.env   # if provided
+cd backend; python -m venv venv; venv\Scripts\activate; pip install -r requirements.txt; uvicorn main:app --port 8000 --reload
+start powershell -NoExit -Command "cd ../frontend; npm install; npm run dev"
+start powershell -NoExit -Command "cd ../Suraksha_Electron_App/new; npm install; npm start"
+```
 
-### System Verification
+Verification:
 
-After starting all components, verify they're working:
-
-```bash
-# 1. Backend API (should return {"msg": "PolicyVault backend running"})
+```powershell
 curl http://localhost:8000/
+curl http://localhost:8000/docs
+```
 
-# 2. Frontend (should load React app)
-# Open browser: http://localhost:5174
+<details>
+<summary>Database Initialization Notes</summary>
 
-# 3. API Documentation (should show FastAPI docs)
-# Open browser: http://localhost:8000/docs
+Tables inferred: organizations, accounts, customers, requested_consents, audit_logs, secure_files, secure_password, admin_audit_logs. Ensure JSON columns (`datafields`, `consent_details`, `location_data`, `action_details`) exist with appropriate types. Add indexes: `requested_consents(fiu_id,status,status_admin)`, `audit_logs(consent_id,timestamp)`, `secure_files(consent_id)`, `organizations(api_key,status)`.
 
-# 4. Electron App (should open desktop application window)
-# Should launch automatically with npm start
+</details>
+
+---
+
+## 4. API DOCUMENTATION
+
+Below is a concise but comprehensive reference based strictly on the inspected source files.
+
+### 4.1 Authentication (Customer OTP Flow)
+
+| Method | Path              | Description                                 | Auth | Body                                | Success Response                               |
+| ------ | ----------------- | ------------------------------------------- | ---- | ----------------------------------- | ---------------------------------------------- |
+| POST   | /auth/start-login | Initiate OTP login (reCAPTCHA + Twilio/SMS) | None | `{account_number, recaptcha_token}` | `{message, phoneMasked}`                       |
+| POST   | /auth/verify-otp  | Verify OTP and issue JWT                    | None | `{account_number, otp}`             | `{message, token, customer_name, customer_id}` |
+
+Example:
+
+```bash
+curl -X POST http://localhost:8000/auth/start-login ^
+  -H "Content-Type: application/json" ^
+  -d '{"account_number":"1234567890","recaptcha_token":"<token>"}'
+```
+
+### 4.2 Organization Registration & Verification
+
+| Method | Path                                      | Description                            | Body                        | Notes                                   |
+| ------ | ----------------------------------------- | -------------------------------------- | --------------------------- | --------------------------------------- |
+| POST   | /register_org/register                    | Register organization (status=PENDING) | OrganizationCreate fields   | Returns `verification_token`, `api_key` |
+| GET    | /register_org/verify-organization/{token} | Verify via emailed token               | None                        | Sets status=VERIFIED                    |
+| POST   | /register_org/send-verification-email     | Trigger EmailJS send                   | `{email, org_name, org_id}` | Requires EMAILJS env vars               |
+| GET    | /register_org/verify-org?token=...        | Alternate verify endpoint              | Query param                 | Similar logic                           |
+| POST   | /register_org/storage/upload-logo         | Upload logo to Supabase Storage        | multipart file              | Bucket: `logo-org`                      |
+
+### 4.3 Organization Authentication
+
+| Method | Path              | Description                           | Body                                       | Response                        |
+| ------ | ----------------- | ------------------------------------- | ------------------------------------------ | ------------------------------- |
+| POST   | /org-auth/login   | Org login with email+password+api_key | `{email,password,api_key,recaptcha_token}` | JWT token (HS256) + org profile |
+| POST   | /org-auth/signout | Invalidate client session             | None                                       | `{message}`                     |
+
+### 4.4 Consent Requests (FIU Perspective)
+
+| Method | Path                     | Description               | Auth             | Body                                                                      | Response                     |
+| ------ | ------------------------ | ------------------------- | ---------------- | ------------------------------------------------------------------------- | ---------------------------- |
+| POST   | /consent/request-consent | Create new consent        | Org JWT          | `{user_identifier,purpose,datafields,consent_signature?,consent_details}` | Consent record               |
+| GET    | /consent/consents        | List FIU consents         | Org JWT (Bearer) | None                                                                      | Array of simplified consents |
+| GET    | /consent/consents-admin  | Admin listing             | Admin context    | None                                                                      | All consents                 |
+| GET    | /consent/organizations   | List organizations        | None             | `{id, org_name}`                                                          |
+| GET    | /consent/stats           | Aggregate stats by status | Org JWT          | None                                                                      | `{totalRequests,...}`        |
+
+### 4.5 User Consent Interaction (Customer Perspective)
+
+| Method | Path                                 | Description                                | Auth             | Query/Body                    | Notes                                            |
+| ------ | ------------------------------------ | ------------------------------------------ | ---------------- | ----------------------------- | ------------------------------------------------ |
+| GET    | /pending?current_user_id=UUID        | Pending requests (PENDING/PENDING)         | User JWT (HS256) | Query param                   | Uses dynamic date parsing                        |
+| PUT    | /{consent_id}/status                 | Update user status (APPROVED/REJECTED/...) | User JWT         | `{status, rejection_reason?}` | Sets `status` only, admin retains `status_admin` |
+| GET    | /api/active-consents/{customer_id}   | Active consents                            | User JWT         | Path                          | Filters by APPROVED/APPROVED                     |
+| GET    | /api/rejected-consents/{customer_id} | Rejected consents (either side)            | User JWT         | Path                          | Includes `rejection_reason`                      |
+
+### 4.6 Admin Consent Operations
+
+| Method | Path                                   | Description                        | Auth                        | Body                                         | Outcome                          |
+| ------ | -------------------------------------- | ---------------------------------- | --------------------------- | -------------------------------------------- | -------------------------------- |
+| GET    | /admin/pending-consents                | List consents needing admin action | Cookie `adminToken` (RS256) | None                                         | Pending subset                   |
+| GET    | /admin/consent-details/{id}            | Detailed consent view              | Admin token                 | None                                         | Consent + account + organization |
+| POST   | /admin/approve-consent                 | Approve and generate vault         | Admin token                 | `{consent_id, approved_fields, expiry_date}` | Vault file + updates             |
+| POST   | /admin/reject-consent                  | Reject consent                     | Admin token                 | `{consent_id, reason}`                       | status_admin=REJECTED            |
+| POST   | /admin/revoke-consent                  | Revoke active consent              | Admin token                 | `{consent_id}`                               | status_admin=REVOKED             |
+| GET    | /password-vault/{consent_id}?token=... | One-time password retrieval        | Admin flow                  | Query token (future)                         | Returns password then cleanup    |
+| DELETE | /api/cleanup/{consent_id}              | Cleanup password ref               | Internal                    | None                                         | pass_id nulled                   |
+
+### 4.7 Audit & Logging
+
+| Method | Path        | Description        | Body                                                                                        |
+| ------ | ----------- | ------------------ | ------------------------------------------------------------------------------------------- |
+| POST   | /audit/log  | Write audit entry  | query/form params (`consent_id`, `action`, `status`, `fiu_id`, etc.)                        |
+| GET    | /audit/logs | Read filtered logs | Query params: `consent_id`, `action`, `status`, `start_date`, `end_date`, `limit`, `fiu_id` |
+
+### 4.8 Invite Token Service (Admin Onboarding)
+
+`token_invite.py` standalone app endpoints (if mounted):
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | /api/generate-invite-token | Generate & email admin invite token |
+| GET | /api/verify-token/{token} | Verify token validity |
+| POST | /api/use-token/{token} | Mark token used |
+| GET | /api/health | Health probe |
+
+<details>
+<summary>Error Responses (Common Patterns)</summary>
+
+- 400: Invalid OTP, Captcha failed, bad input format.
+- 401: Missing/Invalid JWT (Bearer), incorrect API key.
+- 403: Organization not verified.
+- 404: Record not found (consent, organization, account).
+- 429: OTP resend or attempts exceeded.
+- 500: Unexpected server/database/audit or vault service failure.
+
+</details>
+
+---
+
+## 5. USAGE GUIDE
+
+### 5.1 Frontend Dashboards
+
+| Dashboard       | Path                         | Purpose                                                 |
+| --------------- | ---------------------------- | ------------------------------------------------------- |
+| Landing         | `/`                          | Entry point, marketing + login initiation               |
+| User Dashboard  | `/user-dashboard` or `/user` | View pending/active consents, approve/reject            |
+| FIU Dashboard   | `/fiu-dashboard`             | Initiate consent requests, monitor stats                |
+| Admin Dashboard | `/admin-dashboard`           | Review/approve/reject/revoke consents, audit visibility |
+
+Workflow Examples:
+
+1. Customer logs in via OTP → receives token → views `pending` consents → approves selected → appears in active list after admin approval.
+2. FIU authenticates → submits consent with required `datafields` → monitors status shifts.
+3. Admin authenticates (cookie RS256) → fetches pending consents → approves → vault generated → secure file recorded.
+
+### 5.2 Electron Vault App
+
+Purpose: local secure handling of vault files, optional offline decryption, and integrity checks.
+
+Features:
+
+- Reads Supabase storage references.
+- Can support key destruction & local secure deletion.
+- `generate_vault.js` coordinates packaging logic.
+
+<!-- Screenshot: [Landing Page] -->
+<!-- Screenshot: [User Pending Consents] -->
+<!-- Screenshot: [Admin Approval Modal] -->
+<!-- Screenshot: [Vault Download Dialog] -->
+
+### 5.3 Step-by-Step User Consent Approval
+
+1. FIU requests consent (PENDING/PENDING)
+2. User approves (status becomes APPROVED/PENDING)
+3. Admin approves (status becomes APPROVED/APPROVED → ACTIVE)
+4. Admin may later revoke (status_admin=REVOKED)
+5. Expiry job (future) sets EXPIRED when `actual_expiry` < now.
+
+---
+
+## 6. SECURITY & COMPLIANCE
+
+### 6.1 Cryptography Implementation
+
+| Layer                | Mechanism                   | Code Source               | Purpose                                       |
+| -------------------- | --------------------------- | ------------------------- | --------------------------------------------- |
+| Password Hashing     | Argon2 (passlib)            | `app/security/crypto.py`  | Admin/Org credential storage                  |
+| Symmetric Encryption | Fernet (AES-256) PBKDF2HMAC | `app/security/crypto.py`  | Protect TOTP/secret material & vault contents |
+| JWT User/Org         | HS256                       | `utils.py`, `org_auth.py` | Lightweight session tokens                    |
+| Admin JWT            | RS256 (RSA 2048)            | `app/security/jwt.py`     | Tamper-resistant cookies                      |
+| Vault Password       | bcrypt hashed               | `admin_consents.py`       | Rotate on revoke                              |
+
+Example (Fernet encryption):
+
+```python
+encrypted, salt_hex = encrypt_data("sensitive_value")
+decrypted = decrypt_data(encrypted, salt_hex)
+```
+
+### 6.2 Zero-Persistence Strategy
+
+- OTP values ephemeral (in-memory dict, recommended Redis replacement).
+- Vault files stored encrypted in Supabase Storage; passwords isolated.
+- No plaintext sensitive PII persisted beyond hashed/tokenized forms.
+- Dynamic RSA key generation fallback if not provisioned (consider HSM integration).
+
+### 6.3 Compliance Mapping
+
+| Control                   | Implementation                     | Notes                                  |
+| ------------------------- | ---------------------------------- | -------------------------------------- |
+| Explicit Consent          | `requested_consents` + signatures  | SHA-256 signature on `consent_details` |
+| Auditability              | `/audit/log` + admin audit logs    | IP + geo enrichment                    |
+| Data Minimization         | Field-level `datafields` selection | Only approved subset packaged          |
+| Right to Revoke           | `/admin/revoke-consent`            | Password rotation ensures unusability  |
+| Breach Detection (future) | `ml/anomaly.py` placeholder        | Extend with anomaly scoring            |
+
+---
+
+## 7. TROUBLESHOOTING
+
+| Issue                    | Symptom                   | Resolution                                                                |
+| ------------------------ | ------------------------- | ------------------------------------------------------------------------- |
+| Backend 404 root         | `{}` or error             | Ensure running in `backend/` and command uses `main:app`                  |
+| OTP always fails         | 400 Captcha failed        | Verify `RECAPTCHA_SECRET`, disable for local test by mocking response     |
+| Twilio errors            | Exception printed, no SMS | Local debug prints fallback; set credentials correctly                    |
+| Org login fails          | 403 not verified          | Complete email verification (`/register_org/verify-organization/{token}`) |
+| Consent stats empty      | All zeros                 | Check token (Bearer) header formation `Authorization: Bearer <jwt>`       |
+| Vault not generated      | Approve returns error     | Confirm Node vault service running on port 3000                           |
+| RS256 admin decode fails | 401 on admin endpoints    | Regenerate `private_key.pem`/`public_key.pem` with proper permissions     |
+| Datafields wrong type    | UI anomalies              | Ensure sending list OR dict; backend normalizes in `approved_consents.py` |
+
+Common Python stack traces often reflect missing env vars; run:
+
+```powershell
+Get-Content backend\.env
 ```
 
 ---
 
-````
+## 8. DEPLOYMENT GUIDE
 
-### API Endpoints
+### 8.1 Production Steps
 
-#### Authentication
+1. Provision managed Postgres (Supabase or RDS) & Redis.
+2. Pre-generate RSA keys; mount read-only.
+3. Containerize (Docker) services: backend, frontend (static build), vault service, Electron optional.
+4. Use reverse proxy (Nginx / Traefik) enforcing HTTPS & security headers.
+5. Centralize secrets in Vault or AWS Secrets Manager.
 
-```bash
-# User Login with OTP
-POST /auth/send-otp
-POST /auth/verify-otp
+### 8.2 Docker (Skeleton Compose)
 
-# Organization Registration
-POST /register_org/register
-````
-
-#### Consent Management
-
-```bash
-# Request Consent
-POST /consent/request
-
-# Approve/Deny Consent
-POST /consent/approve
-POST /consent/deny
+```yaml
+version: '3.9'
+services:
+  api:
+    build: ./backend
+    env_file: backend/.env
+    ports: ["8000:8000"]
+  frontend:
+    build: ./frontend
+    ports: ["5174:80"]
+  vaultsvc:
+    build: ./vault-service
+    ports: ["3000:3000"]
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
 ```
 
-#### Data Operations
+### 8.3 Monitoring & Logging
 
-```bash
-# Secure Data Submission (E2EE)
-POST /api/secure-submit
+- FastAPI access logs → structured JSON
+- Audit logs already in DB; export to ELK or OpenSearch.
+- Add Prometheus endpoints (`/metrics`) in future iteration.
 
-# Vault File Generation
-POST /api/generate-vault
-```
+### 8.4 Performance Tips
 
-### Frontend Interfaces
-
-1. **Landing Page** (`/`) - Public information and login
-2. **User Dashboard** (`/user`) - Data consent management
-3. **FIU Dashboard** (`/fiu-dashboard`) - Financial institution interface
-4. **Admin Dashboard** (`/admin`) - System administration
-
-### Troubleshooting
-
-#### Backend Issues
-
-```bash
-# If backend fails to start, ensure correct path:
-cd backend  # Should contain main.py directly
-
-# If module import errors occur:
-export PYTHONPATH=$(pwd)  # Linux/Mac
-set PYTHONPATH=%cd%       # Windows
-
-# If Supabase connection fails:
-# Check .env file has correct SUPABASE_URL and SUPABASE_SERVICE_ROLE
-```
-
-#### Frontend Issues
-
-```bash
-# If frontend fails to start:
-cd frontend
-npm install  # Reinstall dependencies
-npm run dev  # Start development server on port 5174
-```
-
-#### Electron Issues
-
-```bash
-# If Electron app won't start:
-cd ../Suraksha_Electron_App/new  # Correct path from project root
-npm install  # Ensure dependencies are installed
-npm start
-```
-
----## 🔐 Security & Compliance Features
-
-### Encryption Standards
-
-- **FF3-1 Format-Preserving Encryption**: NIST-approved tokenization for PAN, Aadhaar, account numbers
-- **AES-256-GCM**: Military-grade symmetric encryption for sensitive fields
-- **RSA-OAEP 2048-bit**: Asymmetric encryption for key exchange
-- **Hybrid E2EE**: RSA + AES combination for optimal security and performance
-
-### Authentication & Authorization
-
-- **Multi-Factor Authentication**: OTP + Device fingerprinting
-- **JWT with RS256**: Cryptographically signed tokens
-- **Device Binding**: FingerprintJS-based device recognition
-- **IP Whitelisting**: Geographic and network-based access control
-- **Session Management**: Secure cookie-based sessions
-
-### Compliance Controls
-
-- **Consent Artifacts**: Digitally signed consent records
-- **Audit Logging**: Comprehensive ELK stack integration
-- **Data Minimization**: Field-level access control
-- **Right to Erasure**: GDPR-compliant data deletion
-- **Breach Detection**: ML-based anomaly detection
-
-### Zero-Persistence Architecture
-
-- **In-Memory Processing**: No sensitive data persists on disk
-- **Vault Files**: Encrypted temporary storage with automatic expiry
-- **Stateless Design**: No server-side session storage
-- **Secure Deletion**: Cryptographic key destruction
+- Index heavy filters: consent status, fiu_id.
+- Use async DB operations where possible (current supabase client is synchronous wrapper).
+- Batch audit writes (queue) under load.
 
 ---
 
-## 🧱 Technologies Used
+## 9. DEVELOPMENT WORKFLOW
 
-### Backend Stack
+### 9.1 Local Flow
 
-- **FastAPI** - High-performance Python web framework
-- **Supabase** - Backend-as-a-Service with PostgreSQL
-- **Redis** - In-memory caching and session storage
-- **PyOTP** - Time-based OTP generation
-- **cryptography** - Advanced cryptographic operations
-- **jose** - JWT token handling
-- **argon2-cffi** - Password hashing
+1. Fork → create feature branch.
+2. Add tests (pytest for backend, React Testing Library for frontend).
+3. Run linters: `ruff` (add) & `eslint`.
+4. Submit PR with diagrams updated if architecture changes.
 
-### Frontend Stack
+### 9.2 Testing
 
-- **React 18** - Modern UI framework
-- **TypeScript** - Type-safe JavaScript
-- **Vite** - Fast build tooling
-- **Tailwind CSS** - Utility-first styling
-- **Axios** - HTTP client
-- **React Router** - Client-side routing
+Add `tests/` in backend:
 
-### Desktop Application
+```python
+def test_root(client):
+  r = client.get("/")
+  assert r.status_code == 200
+```
 
-- **Electron** - Cross-platform desktop runtime
-- **Node.js** - JavaScript runtime
-- **Supabase-js** - Database client
+### 9.3 Code Standards
 
-### Security & DevOps
+- Python: PEP8, type hints, avoid blocking I/O in async contexts.
+- TypeScript: strict mode, descriptive types for API response.
+- Security: validate all external input, sanitize file uploads.
 
-- **Open Policy Agent (OPA)** - Policy-based access control
-- **ELK Stack** - Elasticsearch, Logstash, Kibana for logging
-- **FingerprintJS** - Device identification
-- **Okta** - Identity provider integration
+### 9.4 Contribution Guidelines
 
-### Compliance & Standards
+```bash
+git checkout -b feature/my-change
+git commit -m "feat: add X"
+git push origin feature/my-change
+```
 
-- **RBI Account Aggregator Framework**
-- **India DPDP Act 2023**
-- **GDPR (EU)**
-- **NIST Cryptographic Standards**
-- **ISO 27001/27002**
+Open PR with: motivation, diagrams impacted, testing evidence.
 
 ---
 
-## 🙌 Contributing
+## 10. TECHNOLOGY STACK
 
-### Development Setup
+| Layer         | Technology                  | Version                 | Rationale                     |
+| ------------- | --------------------------- | ----------------------- | ----------------------------- |
+| API           | FastAPI                     | 0.116.1                 | High-perf async, OpenAPI docs |
+| Runtime       | Python                      | 3.10+                   | Modern typing & libs          |
+| Frontend      | React + Vite                | 18.3.1 / 5.4.2          | Fast DX, modular dashboards   |
+| Desktop       | Electron                    | 25.0.0                  | Local secure vault ops        |
+| DB            | Supabase Postgres           | Managed                 | Auth & storage integration    |
+| Crypto        | cryptography/passlib/argon2 | 45.0.5 / 1.7.4 / 23.1.0 | Trusted primitives            |
+| Auth          | jose + bcrypt               | 3.3.0 / 4.1.2           | JWT & password hashing        |
+| Messaging     | Twilio / EmailJS            | External                | Communication & verification  |
+| Observability | Audit tables                | Custom                  | Regulatory traceability       |
 
-1. Fork the repository
-2. Create feature branch: `git checkout -b feature/amazing-feature`
-3. Follow existing code style and patterns
-4. Add comprehensive tests for new features
-5. Update documentation as needed
-6. Submit pull request with detailed description
-
-### Code Standards
-
-- **Python**: Follow PEP 8, use type hints
-- **TypeScript**: Strict mode enabled, ESLint configuration
-- **Security**: All user inputs must be validated and sanitized
-- **Testing**: Minimum 80% code coverage required
-
-### Security Considerations
-
-- Never commit secrets or API keys
-- Use environment variables for configuration
-- Implement proper error handling without information leakage
-- Follow OWASP security guidelines
-
-### TODO Items
-
-- [ ] Kubernetes deployment manifests
-- [ ] Docker containerization
-- [ ] CI/CD pipeline setup
-- [ ] Comprehensive unit test suite
-- [ ] Load testing and performance optimization
-- [ ] Advanced threat detection models
-- [ ] Multi-tenant architecture support
+Integration Flow: Frontend → FastAPI → Supabase (DB/Storage) → Node Vault service → Back to FastAPI (metadata) → Client.
 
 ---
 
@@ -377,30 +724,26 @@ npm start
 
 This project is proprietary software developed for secure financial data operations. All rights reserved.
 
-**Important**: This software contains cryptographic implementations and is subject to export control regulations. Ensure compliance with local laws before distribution.
+Important: Contains cryptographic functionality—validate export compliance for your jurisdiction.
 
 ---
 
 ## 📞 Support & Contact
 
-For technical support, security issues, or commercial inquiries:
+- Technical Documentation: (add `/docs` directory when available)
+- Security Reports: Responsible disclosure via secure channel
+- Commercial Licensing: Open to enterprise engagements
 
-- **Technical Documentation**: Available in `/docs` directory
-- **Security Reports**: Please report vulnerabilities responsibly
-- **Commercial Licensing**: Contact for enterprise deployment options
-
-**Disclaimer**: This software is provided for evaluation purposes. Production deployment requires proper security assessment and compliance verification.
+Disclaimer: Provided for evaluation; production hardening (threat modeling, pen-test, key management) required.
 
 ---
 
 ## 🌟 Acknowledgments
 
-- RBI Account Aggregator Framework for regulatory guidance
-- NIST for cryptographic standards and recommendations
-- Open source community for foundational technologies
-- Security researchers for responsible disclosure practices
-
----
+- RBI Account Aggregator Framework
+- NIST guidance
+- Open source maintainers of FastAPI, Supabase, cryptography, React
+- Contributors & reviewers
 
 <p align="center">
   <em>Built with ❤️ for secure and compliant fintech operations by 
@@ -409,3 +752,25 @@ For technical support, security issues, or commercial inquiries:
   </em>
 </p>
 
+---
+
+### Next Steps (Roadmap)
+
+- Kubernetes manifests
+- Docker multi-stage builds
+- CI/CD (GitHub Actions) with security scans
+- Anomaly detection model integration (`ml/anomaly.py`)
+- Automated expiry & revocation scheduler
+- Multi-tenant isolation layer
+
+---
+
+### Appendix: Glossary
+
+- FIU: Financial Information User
+- Consent Lifecycle: PENDING → (User APPROVED) → PENDING_ADMIN → APPROVED → ACTIVE → (REVOKED|EXPIRED|REJECTED)
+- Vault File: Encrypted bundle of approved data fields, stored in Supabase Storage
+
+---
+
+> Generated from live repository code analysis (backend, frontend, electron components). Update if schema/routes change.
